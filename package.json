@@ -88,7 +88,13 @@
     "lint": "eslint src",
     "test": "vscode-test",
     "build-vsix": "vsce package",
-    "install-local": "node ./scripts/install-local.js"
+    "install-local": "node ./scripts/install-local.js",
+    "release:patch": "node ./scripts/create-release.js patch",
+    "release:minor": "node ./scripts/create-release.js minor",
+    "release:major": "node ./scripts/create-release.js major",
+    "release:patch:push": "node ./scripts/create-release.js patch --push",
+    "release:minor:push": "node ./scripts/create-release.js minor --push",
+    "release:major:push": "node ./scripts/create-release.js major --push"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
