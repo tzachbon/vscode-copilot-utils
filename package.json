@@ -87,8 +87,7 @@
     "check-types": "tsc --noEmit",
     "lint": "eslint src",
     "test": "vscode-test",
-    "build-vsix": "vsce package",
-    "install-extension": "npm run build-vsix && code --install-extension vscode-copilot-utils-0.0.1.vsix"
+    "build-vsix": "vsce package"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
