@@ -5,6 +5,13 @@ on:
     tags:
       - 'v*' # Run when tag matches v*, e.g., v1.0.0
 
+# Add explicit permissions for the GITHUB_TOKEN
+permissions:
+  contents: write
+  packages: write
+  issues: read
+  pull-requests: read
+
 jobs:
   build:
     name: Build and Release
