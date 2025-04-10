@@ -1,0 +1,108 @@
+{
+  "name": "vscode-copilot-utils",
+  "displayName": "Copilot Custom Variables",
+  "description": "Adds custom variables to Copilot agents, including branch changes detection",
+  "version": "0.0.1",
+  "publisher": "user",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other",
+    "Machine Learning",
+    "Programming Languages"
+  ],
+  "keywords": [
+    "copilot",
+    "github",
+    "git",
+    "variables",
+    "branch"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "vscode-copilot-utils.refreshBranchChanges",
+        "title": "Copilot Variables: Refresh Git Branch Changes"
+      },
+      {
+        "command": "vscode-copilot-utils.fetchVariable",
+        "title": "Copilot Variables: Fetch Variable Value"
+      },
+      {
+        "command": "vscode-copilot-utils.listVariables",
+        "title": "Copilot Variables: List Available Variables"
+      },
+      {
+        "command": "vscode-copilot-utils.processText",
+        "title": "Copilot Variables: Process Text with Variables"
+      }
+    ],
+    "configuration": {
+      "title": "Copilot Custom Variables",
+      "properties": {
+        "copilotVariables.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable the Copilot Custom Variables extension"
+        },
+        "copilotVariables.defaultBranch": {
+          "type": "string",
+          "default": "",
+          "description": "Override the default branch name (leave empty to auto-detect main/master)"
+        },
+        "copilotVariables.showStatusBarItem": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show the Copilot Variables item in the status bar"
+        },
+        "copilotVariables.maxLineCount": {
+          "type": "number",
+          "default": 100,
+          "description": "Maximum number of lines to return when displaying branch changes"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "npm run check-types && npm run lint && node esbuild.js",
+    "watch": "npm-run-all -p watch:*",
+    "watch:esbuild": "node esbuild.js --watch",
+    "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+    "package": "npm run check-types && npm run lint && node esbuild.js --production",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "20.x",
+    "@types/vscode": "^1.80.0",
+    "@typescript-eslint/eslint-plugin": "^8.28.0",
+    "@typescript-eslint/parser": "^8.28.0",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1",
+    "esbuild": "^0.25.1",
+    "eslint": "^9.23.0",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "simple-git": "^3.27.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/username/vscode-copilot-utils.git"
+  },
+  "bugs": {
+    "url": "https://github.com/username/vscode-copilot-utils/issues"
+  }
+}
