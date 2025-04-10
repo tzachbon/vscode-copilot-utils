@@ -2,7 +2,7 @@
   "name": "vscode-copilot-utils",
   "displayName": "VS Code Copilot Utils",
   "description": "A collection of utilities for enhancing GitHub Copilot in VS Code, including custom variables, context providers, and more",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "user",
   "engines": {
     "vscode": "^1.80.0"
