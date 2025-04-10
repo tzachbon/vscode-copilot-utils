@@ -8,7 +8,8 @@
     "vscode": "^1.95.0"
   },
   "enabledApiProposals": [
-    "languageModelTools"
+    "languageModelTools",
+    "chatParticipants"
   ],
   "categories": [
     "Other",
@@ -24,7 +25,8 @@
     "utils"
   ],
   "activationEvents": [
-    "onStartupFinished"
+    "onStartupFinished",
+    "onChatParticipant:vscode-copilot-utils.git"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -76,16 +78,36 @@
         }
       }
     },
+    "chatParticipants": [
+      {
+        "id": "vscode-copilot-utils.git",
+        "fullName": "Git Branch Utilities",
+        "name": "git",
+        "description": "Provides information about the current Git branch, like recent changes.",
+        "isSticky": true,
+        "disambiguation": [
+          {
+            "category": "git_status",
+            "description": "Use this participant for questions about the current Git branch status, differences between branches, or recent changes.",
+            "examples": [
+              "What files have I changed in this branch?",
+              "Show me the difference between this branch and main.",
+              "Summarize my recent Git changes."
+            ]
+          }
+        ]
+      }
+    ],
     "languageModelTools": [
       {
         "name": "vscode-copilot-utils.branch-changes",
-        "displayName": "Branch Changes",
-        "description": "Retrieves changes between the current Git branch and the main/master branch.",
+        "displayName": "Get Branch Changes",
+        "description": "Retrieves a summary of file changes (added, modified, deleted) between the current Git branch and the main/master branch.",
         "canBeReferencedInPrompt": true,
         "toolReferenceName": "branch-changes",
         "icon": "$(git-branch)",
-        "userDescription": "Get a summary of file changes (added, modified, deleted) in the current Git branch compared to the main/master branch.",
-        "modelDescription": "Provides a summary of file changes between the current Git branch and the repository's main or master branch. Useful for understanding recent work or preparing commit messages."
+        "userDescription": "Get a summary of file changes in the current Git branch compared to the main/master branch.",
+        "modelDescription": "Provides a summary of file changes (added, modified, deleted) between the current Git branch and the repository's main or master branch. Useful for understanding recent work or preparing commit messages."
       }
     ]
   },
