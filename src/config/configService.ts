@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { ConfigurationService } from '../interfaces';
+import type { ConfigurationService } from '../interfaces';
 
 /**
  * Handles configuration for the VS Code Copilot Utils extension

@@ -1,4 +1,4 @@
-import * as vscode from 'vscode';
+import type * as vscode from 'vscode';
 
 /**
  * Base interface for all features in the extension

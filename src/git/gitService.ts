@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as simpleGit from 'simple-git';
-import { SimpleGit } from 'simple-git';
-import { GitChange } from '../interfaces';
+import type { SimpleGit } from 'simple-git';
+import type { GitChange } from '../interfaces';
 import { configService } from '../config/configService';
 
 /**
@@ -85,8 +85,8 @@ export class GitService {
       const remotesOutput = await git.remote(['show', 'origin']);
 
       if (typeof remotesOutput === 'string' && remotesOutput.includes('HEAD branch:')) {
-        const match = remotesOutput.match(/HEAD branch: ([^\n]+)/);
-        if (match && match[1]) {
+        const match = remotesOutput?.match(/HEAD branch: ([^\n]+)/);
+        if (match?.[1]) {
           return match[1].trim();
         }
       }
@@ -132,20 +132,16 @@ export class GitService {
    * @returns Array of changes between branches
    */
   public async getBranchChanges(
-    sourceBranch?: string,
-    targetBranch?: string,
+    initialSourceBranch?: string,
+    initialTargetBranch?: string,
   ): Promise<GitChange[]> {
     const { git } = await this.getGit();
 
     // If no source branch is specified, use current branch
-    if (!sourceBranch) {
-      sourceBranch = await this.getCurrentBranch();
-    }
+    const sourceBranch = initialSourceBranch || (await this.getCurrentBranch());
 
     // If no target branch is specified, use main/master
-    if (!targetBranch) {
-      targetBranch = await this.getMainBranch();
-    }
+    const targetBranch = initialTargetBranch || (await this.getMainBranch());
 
     // If source and target are the same, return empty array
     if (sourceBranch === targetBranch) {

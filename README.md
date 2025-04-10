@@ -16,7 +16,7 @@ Currently, this extension provides:
 
 When chatting with GitHub Copilot, you can use the custom variables by including them in your prompt:
 
-```
+```markdown
 Can you explain what changes I've made in this branch? #branch-changes
 ```
 

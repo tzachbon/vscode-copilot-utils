@@ -4,7 +4,7 @@ import { variableService } from './variables/variableService';
 import { createBranchChangesVariable } from './variables/branchChangesVariable';
 import { gitService } from './git/gitService';
 import { statusBarManager } from './utils/statusBarManager';
-import { CopilotUtilsFeature } from './interfaces';
+import type { CopilotUtilsFeature } from './interfaces';
 
 // Collection of all features
 const features: CopilotUtilsFeature[] = [variableService];
@@ -26,13 +26,13 @@ export function activate(context: vscode.ExtensionContext) {
   registerGlobalCommands(context);
 
   // Initialize features
-  features.forEach((feature) => {
+  for (const feature of features) {
     try {
       feature.initialize(context);
     } catch (error) {
       console.error(`Error initializing feature "${feature.name}":`, error);
     }
-  });
+  }
 
   // Register variables
   registerVariables();
@@ -93,13 +93,13 @@ function registerVariables(): void {
  */
 export function deactivate() {
   // Dispose of all features
-  features.forEach((feature) => {
+  for (const feature of features) {
     try {
       feature.dispose();
     } catch (error) {
       console.error(`Error disposing feature "${feature.name}":`, error);
     }
-  });
+  }
 
   // Dispose of UI components
   statusBarManager.dispose();

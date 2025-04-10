@@ -1,4 +1,4 @@
-import { VariableHandler } from '../interfaces';
+import type { VariableHandler } from '../interfaces';
 import { gitService } from '../git/gitService';
 
 /**

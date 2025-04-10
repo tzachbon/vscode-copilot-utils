@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { VariableHandler, CopilotUtilsFeature } from '../interfaces';
+import type { VariableHandler, CopilotUtilsFeature } from '../interfaces';
 import { configService } from '../config/configService';
 
 /**
@@ -123,10 +123,11 @@ export class VariableService implements CopilotUtilsFeature {
 
   /**
    * Process text and replace variable references with their values
-   * @param text The text to process
+   * @param initialText The text to process
    * @returns The processed text with variables replaced
    */
-  public async processText(text?: string): Promise<string> {
+  public async processText(initialText?: string): Promise<string> {
+    let text = initialText;
     if (!text) {
       text =
         (await vscode.window.showInputBox({
@@ -191,7 +192,8 @@ export class VariableService implements CopilotUtilsFeature {
   /**
    * Handler for the fetchVariable command
    */
-  private async fetchVariable(variableName?: string): Promise<string | undefined> {
+  private async fetchVariable(initialVariableName?: string): Promise<string | undefined> {
+    let variableName = initialVariableName;
     if (!variableName) {
       // If no variable name provided, show a quick pick to select one
       const variables = this.getVariables();
@@ -250,7 +252,9 @@ export class VariableService implements CopilotUtilsFeature {
    * Dispose of resources
    */
   public dispose(): void {
-    this.disposables.forEach((d) => d.dispose());
+    for (const disposable of this.disposables) {
+      disposable.dispose();
+    }
     this.disposables = [];
     this._onVariableRegistered.dispose();
   }

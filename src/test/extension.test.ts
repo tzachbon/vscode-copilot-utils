@@ -1,4 +1,4 @@
-import * as assert from 'assert';
+import * as assert from 'node:assert';
 import * as vscode from 'vscode';
 import * as sinon from 'sinon';
 import { configService } from '../config/configService';
@@ -6,7 +6,7 @@ import { variableService } from '../variables/variableService';
 import { gitService } from '../git/gitService';
 
 // Helper to ensure the extension is activated
-async function ensureExtensionActivated(): Promise<vscode.Extension<any>> {
+async function ensureExtensionActivated(): Promise<vscode.Extension<unknown>> {
   const extension = vscode.extensions.getExtension('user.vscode-copilot-utils');
   if (!extension) {
     throw new Error('Extension not found');
@@ -85,7 +85,7 @@ suite('Extension Test Suite', () => {
 
   test('Git service should handle errors gracefully', async () => {
     // Mock git service to simulate error
-    sandbox.stub(gitService, 'getGit' as any).rejects(new Error('Test error'));
+    sandbox.stub(gitService, 'getGit' as keyof typeof gitService).rejects(new Error('Test error'));
 
     try {
       await gitService.getCurrentBranch();
