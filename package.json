@@ -87,7 +87,8 @@
     "check-types": "tsc --noEmit",
     "lint": "eslint src",
     "test": "vscode-test",
-    "build-vsix": "vsce package"
+    "build-vsix": "vsce package",
+    "install-local": "node ./scripts/install-local.js"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
