@@ -39,10 +39,10 @@ This extension contributes the following commands:
 
 This extension contributes the following settings:
 
-* `copilotVariables.enabled`: Enable or disable the Copilot Custom Variables extension
-* `copilotVariables.defaultBranch`: Override the default branch name (leave empty to auto-detect main/master)
-* `copilotVariables.showStatusBarItem`: Show the Copilot Variables item in the status bar
-* `copilotVariables.maxLineCount`: Maximum number of lines to return when displaying branch changes
+- `copilotVariables.enabled`: Enable or disable the Copilot Custom Variables extension
+- `copilotVariables.defaultBranch`: Override the default branch name (leave empty to auto-detect main/master)
+- `copilotVariables.showStatusBarItem`: Show the Copilot Variables item in the status bar
+- `copilotVariables.maxLineCount`: Maximum number of lines to return when displaying branch changes
 
 ## How It Works
 
@@ -67,6 +67,7 @@ The extension registers custom variable handlers that can be accessed by Copilot
 ## Future Plans
 
 Future versions may include additional custom variables such as:
+
 - #code-coverage
 - #test-status
 - #pr-comments

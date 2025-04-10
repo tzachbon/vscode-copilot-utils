@@ -30,6 +30,7 @@ When suggesting code modifications:
 ## Future Development
 
 We plan to extend this with more custom variables:
+
 - Code coverage information
 - Test status
 - PR comments
