@@ -12,26 +12,29 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
-      
+
       - name: Install Dependencies
         run: npm ci
-      
+        
+      - name: Install xvfb
+        run: sudo apt-get install -y xvfb
+
       - name: Run Tests
-        run: npm test
-      
+        run: xvfb-run -a npm test
+
       - name: Package Extension
         run: npm run build-vsix
-      
+
       - name: Get Extension Version
         id: get-version
         run: echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
-      
+
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
