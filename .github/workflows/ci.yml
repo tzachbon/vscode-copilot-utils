@@ -28,7 +28,7 @@ jobs:
 
       - name: Lint
         run: npm run lint
-        
+
       - name: Install xvfb
         run: sudo apt-get install -y xvfb
 
