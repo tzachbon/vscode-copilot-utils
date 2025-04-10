@@ -1,23 +1,59 @@
-// The module 'vscode' contains the VS Code extensibility API
 import * as vscode from 'vscode';
-import { copilotVariableService } from './copilotVariableService';
-import { GitUtils } from './gitUtils';
+import { configService } from './config/configService';
+import { variableService } from './variables/variableService';
+import { createBranchChangesVariable } from './variables/branchChangesVariable';
+import { gitService } from './git/gitService';
+import { statusBarManager } from './utils/statusBarManager';
+import { CopilotUtilsFeature } from './interfaces';
 
-// This method is called when your extension is activated
+// Collection of all features
+const features: CopilotUtilsFeature[] = [variableService];
+
+/**
+ * This method is called when the extension is activated
+ * @param context The extension context
+ */
 export function activate(context: vscode.ExtensionContext) {
   console.log('Extension "vscode-copilot-utils" is now active!');
 
-  // Register the branch-changes variable handler with proper binding
-  copilotVariableService.registerVariable('branch-changes', () => GitUtils.formatBranchChanges());
+  // Check if extension is enabled
+  if (!configService.isExtensionEnabled()) {
+    console.log('Extension "vscode-copilot-utils" is disabled in settings');
+    return;
+  }
 
+  // Register commands that are always available
+  registerGlobalCommands(context);
+
+  // Initialize features
+  features.forEach((feature) => {
+    try {
+      feature.initialize(context);
+    } catch (error) {
+      console.error(`Error initializing feature "${feature.name}":`, error);
+    }
+  });
+
+  // Register variables
+  registerVariables();
+
+  // Initialize UI components
+  statusBarManager.initialize(context);
+}
+
+/**
+ * Register global commands that are always available
+ * @param context The extension context
+ */
+function registerGlobalCommands(context: vscode.ExtensionContext): void {
   // Register a command to manually refresh branch changes
   const refreshCommand = vscode.commands.registerCommand(
     'vscode-copilot-utils.refreshBranchChanges',
     async () => {
       try {
-        const changes = await GitUtils.formatBranchChanges();
-        const currentBranch = await GitUtils.getCurrentBranch();
-        const mainBranch = await GitUtils.getMainBranch();
+        const changes = await gitService.formatBranchChanges();
+        const currentBranch = await gitService.getCurrentBranch();
+        const mainBranch = await gitService.getMainBranch();
 
         // Show a more detailed message in the UI
         vscode.window.showInformationMessage(
@@ -34,130 +70,37 @@ export function activate(context: vscode.ExtensionContext) {
     },
   );
 
-  // Register a command to list all available variables
-  const listVariablesCommand = vscode.commands.registerCommand(
-    'vscode-copilot-utils.listVariables',
-    () => {
-      const variables = copilotVariableService.getVariableNames();
-
-      if (variables.length === 0) {
-        vscode.window.showInformationMessage('No Copilot custom variables are registered.');
-        return;
-      }
-
-      const variablesMarkdown = variables.map((v) => `- #${v}`).join('\n');
-      const message = `Available Copilot custom variables:\n${variablesMarkdown}`;
-
-      vscode.window.showInformationMessage(message);
-    },
-  );
-
-  // Register a command to fetch a variable value
-  const fetchVariableCommand = vscode.commands.registerCommand(
-    'vscode-copilot-utils.fetchVariable',
-    async (variableName?: string) => {
-      if (!variableName) {
-        // If no variable name provided, show a quick pick to select one
-        const variables = copilotVariableService.getVariableNames();
-
-        if (variables.length === 0) {
-          vscode.window.showInformationMessage('No Copilot custom variables are registered.');
-          return;
-        }
-
-        variableName = await vscode.window.showQuickPick(variables, {
-          placeHolder: 'Select a variable to fetch',
-          title: 'Copilot Custom Variables',
-        });
-
-        if (!variableName) {
-          return; // User cancelled
-        }
-      }
-
-      try {
-        const value = await copilotVariableService.getVariableValue(variableName);
-
-        if (value) {
-          // Show the full value in a modal dialog
-          vscode.window.showInformationMessage(`Value of #${variableName}:`, {
-            modal: false,
-            detail: value,
-          });
-        } else {
-          vscode.window.showWarningMessage(
-            `Variable #${variableName} not found or returned no value.`,
-          );
-        }
-      } catch (error) {
-        vscode.window.showErrorMessage(
-          `Error fetching variable #${variableName}: ${
-            error instanceof Error ? error.message : String(error)
-          }`,
-        );
-      }
-    },
-  );
-
-  // Register a command to process a string with variables
-  const processTextCommand = vscode.commands.registerCommand(
-    'vscode-copilot-utils.processText',
-    async (text?: string) => {
-      if (!text) {
-        text =
-          (await vscode.window.showInputBox({
-            placeHolder: 'Enter text with #variable references',
-            prompt: 'Process text with Copilot custom variables',
-          })) || '';
-
-        if (!text) {
-          return; // User cancelled
-        }
-      }
-
-      try {
-        const processed = await copilotVariableService.processText(text);
-
-        // Copy to clipboard
-        await vscode.env.clipboard.writeText(processed);
-
-        vscode.window.showInformationMessage('Processed text with variables replaced:', {
-          modal: false,
-          detail: processed,
-        });
-
-        return processed;
-      } catch (error) {
-        vscode.window.showErrorMessage(
-          `Error processing text with variables: ${
-            error instanceof Error ? error.message : String(error)
-          }`,
-        );
-      }
-    },
-  );
-
-  // Add all commands to subscriptions
-  context.subscriptions.push(
-    refreshCommand,
-    listVariablesCommand,
-    fetchVariableCommand,
-    processTextCommand,
-  );
-
-  // Create a status bar item for quick access (respect configuration setting)
-  const config = vscode.workspace.getConfiguration('copilotVariables');
-
-  if (config.get<boolean>('showStatusBarItem', true)) {
-    const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
-    statusBarItem.text = '$(copilot) Copilot Vars';
-    statusBarItem.tooltip = 'Manage Copilot custom variables';
-    statusBarItem.command = 'vscode-copilot-utils.listVariables';
-    statusBarItem.show();
-
-    context.subscriptions.push(statusBarItem);
-  }
+  context.subscriptions.push(refreshCommand);
 }
 
-// This method is called when your extension is deactivated
-export function deactivate() {}
+/**
+ * Register all custom variables
+ */
+function registerVariables(): void {
+  // Only register variables if the feature is enabled
+  if (!configService.isVariablesEnabled()) {
+    return;
+  }
+
+  // Register the branch-changes variable
+  variableService.registerVariable(createBranchChangesVariable());
+
+  // Additional variables can be registered here
+}
+
+/**
+ * This method is called when the extension is deactivated
+ */
+export function deactivate() {
+  // Dispose of all features
+  features.forEach((feature) => {
+    try {
+      feature.dispose();
+    } catch (error) {
+      console.error(`Error disposing feature "${feature.name}":`, error);
+    }
+  });
+
+  // Dispose of UI components
+  statusBarManager.dispose();
+}

@@ -1,7 +1,7 @@
 {
   "name": "vscode-copilot-utils",
-  "displayName": "Copilot Custom Variables",
-  "description": "Adds custom variables to Copilot agents, including branch changes detection",
+  "displayName": "VS Code Copilot Utils",
+  "description": "A collection of utilities for enhancing GitHub Copilot in VS Code, including custom variables, context providers, and more",
   "version": "0.0.1",
   "publisher": "user",
   "engines": {
@@ -17,7 +17,8 @@
     "github",
     "git",
     "variables",
-    "branch"
+    "context",
+    "utils"
   ],
   "activationEvents": [
     "onStartupFinished"
@@ -27,40 +28,45 @@
     "commands": [
       {
         "command": "vscode-copilot-utils.refreshBranchChanges",
-        "title": "Copilot Variables: Refresh Git Branch Changes"
+        "title": "Copilot Utils: Refresh Git Branch Changes"
       },
       {
         "command": "vscode-copilot-utils.fetchVariable",
-        "title": "Copilot Variables: Fetch Variable Value"
+        "title": "Copilot Utils: Fetch Variable Value"
       },
       {
         "command": "vscode-copilot-utils.listVariables",
-        "title": "Copilot Variables: List Available Variables"
+        "title": "Copilot Utils: List Available Variables"
       },
       {
         "command": "vscode-copilot-utils.processText",
-        "title": "Copilot Variables: Process Text with Variables"
+        "title": "Copilot Utils: Process Text with Variables"
       }
     ],
     "configuration": {
-      "title": "Copilot Custom Variables",
+      "title": "VS Code Copilot Utils",
       "properties": {
-        "copilotVariables.enabled": {
+        "copilotUtils.enabled": {
           "type": "boolean",
           "default": true,
-          "description": "Enable or disable the Copilot Custom Variables extension"
+          "description": "Enable or disable the VS Code Copilot Utils extension"
         },
-        "copilotVariables.defaultBranch": {
+        "copilotUtils.variables.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable the custom variables feature"
+        },
+        "copilotUtils.git.defaultBranch": {
           "type": "string",
           "default": "",
           "description": "Override the default branch name (leave empty to auto-detect main/master)"
         },
-        "copilotVariables.showStatusBarItem": {
+        "copilotUtils.ui.showStatusBarItem": {
           "type": "boolean",
           "default": true,
-          "description": "Show the Copilot Variables item in the status bar"
+          "description": "Show the Copilot Utils item in the status bar"
         },
-        "copilotVariables.maxLineCount": {
+        "copilotUtils.git.maxLineCount": {
           "type": "number",
           "default": 100,
           "description": "Maximum number of lines to return when displaying branch changes"
@@ -85,6 +91,7 @@
   "devDependencies": {
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
+    "@types/sinon": "^17.0.4",
     "@types/vscode": "^1.80.0",
     "@typescript-eslint/eslint-plugin": "^8.28.0",
     "@typescript-eslint/parser": "^8.28.0",
@@ -93,6 +100,7 @@
     "esbuild": "^0.25.1",
     "eslint": "^9.23.0",
     "npm-run-all": "^4.1.5",
+    "sinon": "^20.0.0",
     "typescript": "^5.8.2"
   },
   "dependencies": {
