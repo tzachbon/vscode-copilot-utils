@@ -4,6 +4,7 @@ import { variableService } from './variables/variableService';
 import { createBranchChangesVariable } from './variables/branchChangesVariable';
 import { gitService } from './git/gitService';
 import { statusBarManager } from './utils/statusBarManager';
+import { BranchChangesToolProvider } from './lmTools';
 import type { CopilotUtilsFeature } from './interfaces';
 
 // Collection of all features
@@ -36,6 +37,9 @@ export function activate(context: vscode.ExtensionContext) {
 
   // Register variables
   registerVariables();
+
+  // Register Copilot tools
+  registerCopilotTools(context);
 
   // Initialize UI components
   statusBarManager.initialize(context);
@@ -71,6 +75,21 @@ function registerGlobalCommands(context: vscode.ExtensionContext): void {
   );
 
   context.subscriptions.push(refreshCommand);
+}
+
+/**
+ * Register Copilot tools with VS Code's Language Model API
+ * @param context The extension context
+ */
+function registerCopilotTools(context: vscode.ExtensionContext): void {
+  try {
+    // Register branch changes tool
+    const branchChangesToolProvider = new BranchChangesToolProvider();
+    branchChangesToolProvider.register(context);
+    console.log('Successfully registered branch-changes tool for Copilot');
+  } catch (error) {
+    console.error('Error registering Copilot tools:', error);
+  }
 }
 
 /**

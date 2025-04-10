@@ -5,8 +5,11 @@
   "version": "0.0.3",
   "publisher": "user",
   "engines": {
-    "vscode": "^1.80.0"
+    "vscode": "^1.95.0"
   },
+  "enabledApiProposals": [
+    "languageModelTools"
+  ],
   "categories": [
     "Other",
     "Machine Learning",
@@ -72,7 +75,19 @@
           "description": "Maximum number of lines to return when displaying branch changes"
         }
       }
-    }
+    },
+    "languageModelTools": [
+      {
+        "name": "vscode-copilot-utils.branch-changes",
+        "displayName": "Branch Changes",
+        "description": "Retrieves changes between the current Git branch and the main/master branch.",
+        "canBeReferencedInPrompt": true,
+        "toolReferenceName": "branch-changes",
+        "icon": "$(git-branch)",
+        "userDescription": "Get a summary of file changes (added, modified, deleted) in the current Git branch compared to the main/master branch.",
+        "modelDescription": "Provides a summary of file changes between the current Git branch and the repository's main or master branch. Useful for understanding recent work or preparing commit messages."
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
@@ -100,7 +115,7 @@
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
     "@types/sinon": "^17.0.4",
-    "@types/vscode": "^1.80.0",
+    "@types/vscode": "^1.95.0",
     "@typescript-eslint/eslint-plugin": "^8.28.0",
     "@typescript-eslint/parser": "^8.28.0",
     "@vscode/test-cli": "^0.0.10",
@@ -110,7 +125,9 @@
     "eslint": "^9.23.0",
     "npm-run-all": "^4.1.5",
     "sinon": "^20.0.0",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "@vscode/prompt-tsx": "^0.3.0-alpha.19",
+    "@vscode/prompt-tsx-elements": "^0.1.0"
   },
   "dependencies": {
     "simple-git": "^3.27.0"
