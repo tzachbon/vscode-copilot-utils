@@ -218,7 +218,8 @@ export class VariableService implements CopilotUtilsFeature {
       variableName = selectedVariable.id;
     }
 
-    // TypeScript guard: ensure variableName is defined
+    // Safety check: This should not occur given the flow above, but TypeScript requires it
+    // to understand that variableName is defined at this point
     if (!variableName) {
       return;
     }
